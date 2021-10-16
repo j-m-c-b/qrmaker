@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Maker</title>
+
+    <style>
+        body {
+            background-color: black;
+            color: white;
+
+        }
+
+        h3 {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        img {
+            /* background-color: white; */
+            /* min-width: 100px; */
+            border: white;
+            border-style: solid;
+            border-width: 10px;
+        }
+
+        #qrcode * {
+            border: 1rem solid white;
+        }
+
+        input,
+        textarea {
+
+            color: white;
+            background-color: rgb(71, 94, 129);
+            font-size: 0.7em;
+
+        }
+
+        .flex-parent {
+            display: flex;
+        }
+
+        .flex-child {
+            flex: 1;
+        }
+
+        input[type="radio"] {
+            width: 2em;
+            height: 2em;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        let decode = false;
+    </script>
+    <script type="text/javascript" src="qrcode.js"></script>
+
+
+    <input id="radoEncod" type="radio" name=myradio value="yes" onchange="changeDecode(this)" checked> encodeURI
+    <input id="radoNotEncod" type="radio" name=myradio value="no" onchange="changeDecode(this)"> simple text
+
+    <h2>encode</h2>
+    <div class='parent flex-parent'>
+        <textarea class='child flex-child' name="" id="code" cols="10" rows="10"></textarea>
+        <div class='child flex-child' id="qrcode"></div>
+    </div>
+
+    <h2>decode</h2>
+    <textarea name="" id="dec" cols="50" rows="10"></textarea>
+    <h3>result</h3>
+    <textarea type="text" cols="50" rows="10" id="result"></textarea type="text">
+ 
+ <script type="text/javascript">
+    var qrcode = new QRCode(document.getElementById("qrcode"), {
+        text: `hi`,
+        width: 128,
+        height: 128,
+        correctLevel: QRCode.CorrectLevel.L
+    });
+
+
+</script>
+    <script>
+        document.getElementById("radoNotEncod").checked = true;
+        function changeDecode(e) {
+            // console.log(e.value);
+            if (e.value === "no") {
+                decode = false;
+                qrcode.makeCode((document.getElementById("code").value));
+            } else {
+                decode = true;
+                qrcode.makeCode(encodeURI(document.getElementById("code").value));
+            }
+
+        }
+
+        document.querySelector("#code").value = "";
+        document.querySelector("#code").focus();
+        document.querySelector("#code").addEventListener("input", function (e) {
+            //console.log(e.key);
+
+            if (decode) {
+                qrcode.makeCode(encodeURI(document.getElementById("code").value));
+            } else {
+                qrcode.makeCode((document.getElementById("code").value));
+            }
+
+
+
+
+        });
+
+        document.querySelector("#dec").addEventListener("input", (e) => {
+            document.querySelector("#result").value = decodeURI(document.querySelector("#dec").value);
+
+        });
+
+    </script>
+
+</body>
+
+</html>
